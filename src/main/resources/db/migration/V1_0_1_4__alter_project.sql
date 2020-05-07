@@ -1,1 +1,0 @@
-alter table project add project_type VARCHAR(16) NOT NULL;
