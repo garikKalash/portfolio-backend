@@ -5,6 +5,7 @@ import com.gk.portfolio.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,12 +21,14 @@ public class UserService implements UserDetailsService {
     private Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired UserRepository userRepository;
+    @Value("${spring.datasource.username}") String username;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         logger.info("start");
         userRepository.findAll().forEach(user -> logger.info(user.getRole() + " " + user.getPassword()));
         logger.info("finish");
+        logger.info(username);
         User user = userRepository.findByRole(s).orElseThrow(() -> new UsernameNotFoundException(s));
         logger.info("user role . " + user.getRole());
         logger.info("user password . " + user.getPassword());
