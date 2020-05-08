@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -101,5 +102,10 @@ public class UserService implements UserDetailsService {
             default:
                 throw new UsernameNotFoundException(role);
         }
+    }
+
+    @Scheduled(fixedDelay = 5_1000L)
+    private void noSleepHeroku() {
+        userRepository.findAll();
     }
 }
