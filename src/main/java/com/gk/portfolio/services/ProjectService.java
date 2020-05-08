@@ -4,6 +4,7 @@ import com.gk.portfolio.entities.Project;
 import com.gk.portfolio.models.ProjectModel;
 import com.gk.portfolio.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.NotFoundException;
@@ -16,7 +17,7 @@ import static java.lang.String.format;
 
 
     public List<Project> getAll(){
-        return projectRepository.findAll();
+        return projectRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
     public List<Project> getByType(String type, boolean noTechPerson){
