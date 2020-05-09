@@ -12,15 +12,17 @@ import java.util.List;
 
 import static java.lang.String.format;
 
-@Service public class ProjectService {
-    @Autowired ProjectRepository projectRepository;
+@Service
+public class ProjectService {
+    @Autowired
+    ProjectRepository projectRepository;
 
 
-    public List<Project> getAll(){
+    public List<Project> getAll() {
         return projectRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
-    public List<Project> getByType(String type, boolean noTechPerson){
+    public List<Project> getByType(String type, boolean noTechPerson) {
         if (noTechPerson) {
             return projectRepository.findNonTechByType(type);
         } else {

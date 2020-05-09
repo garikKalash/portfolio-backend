@@ -8,16 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/files")
 public class FileCloudController {
 
-    @Autowired private MinioCloudService minioService;
+    @Autowired
+    private MinioCloudService minioService;
 
     @GetMapping
     public List<String> names() {
@@ -25,7 +24,7 @@ public class FileCloudController {
     }
 
     @GetMapping("/{name:.+}")
-    public ResponseEntity<byte[]> getObject(@PathVariable("name") String object, HttpServletResponse response) throws IOException {
+    public ResponseEntity<byte[]> getObject(@PathVariable("name") String object) {
         ByteArrayOutputStream downloadInputStream = minioService.download(object);
 
         return ResponseEntity.ok()

@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Service public class CalculatorService {
+@Service
+public class CalculatorService {
 
     private final ExpressionValidator expressionValidator;
 
@@ -21,20 +22,21 @@ import java.util.List;
     }
 
     public Integer evaluate(@NotNull String expression) {
-        if(!expressionValidator.isValid(expression)) throw new InvalidSimpleExpressionException("Given expression is invalid for evaluating: " + expression);
+        if (!expressionValidator.isValid(expression))
+            throw new InvalidSimpleExpressionException("Given expression is invalid for evaluating: " + expression);
         expression = expression.replaceAll(" ", "");
         String[] splitByPlus = expression.split("\\+");
         List<Integer> toSum = new ArrayList<>(splitByPlus.length);
-        Arrays.stream(splitByPlus).forEach(s  -> toSum.add(multiplyDigitsInString(s)));
+        Arrays.stream(splitByPlus).forEach(s -> toSum.add(multiplyDigitsInString(s)));
         return toSum.stream().mapToInt(Integer::intValue).sum();
     }
 
-    private Integer multiplyDigitsInString(String justMultiplicationValidExpression){
-        try{
+    private Integer multiplyDigitsInString(String justMultiplicationValidExpression) {
+        try {
             return Arrays.stream(justMultiplicationValidExpression.split("\\*"))
                     .mapToInt(Integer::valueOf)
                     .reduce(1, (left, right) -> left * right);
-        } catch(NumberFormatException ex){
+        } catch (NumberFormatException ex) {
             throw new InvalidSimpleExpressionException("This part of given expression is invalid for evaluating: " + justMultiplicationValidExpression);
         }
     }

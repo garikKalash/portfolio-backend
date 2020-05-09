@@ -17,7 +17,7 @@ public class CalculatorController {
     private CalculatorService simpleCalculator;
 
     @GetMapping(value = "/{expression}/result")
-    public ResponseEntity<Integer> getResult(@PathVariable String expression){
+    public ResponseEntity<Integer> getResult(@PathVariable String expression) {
         return new ResponseEntity<>(simpleCalculator.evaluate(expression), HttpStatus.OK);
     }
 

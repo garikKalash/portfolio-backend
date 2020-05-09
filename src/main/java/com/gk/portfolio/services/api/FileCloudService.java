@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface FileCloudService {
     void delete(String name);
+
     void upload(MultipartFile file);
+
     ByteArrayOutputStream download(String name);
+
     List<String> fileNames();
 }

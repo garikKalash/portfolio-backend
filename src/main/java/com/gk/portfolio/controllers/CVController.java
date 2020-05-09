@@ -3,6 +3,7 @@ package com.gk.portfolio.controllers;
 import com.gk.portfolio.entities.*;
 import com.gk.portfolio.models.EducationModel;
 import com.gk.portfolio.models.LanguageModel;
+import com.gk.portfolio.models.SkillModel;
 import com.gk.portfolio.services.CVService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,20 +16,18 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/gk/cv")
 @Validated
 public class CVController {
-    @Autowired CVService cvService;
+    @Autowired
+    CVService cvService;
 
     @GetMapping
-    public CV cv(){
+    public CV cv() {
         return cvService.getCv();
     }
 
     @PostMapping("/language")
     @PreAuthorize("hasRole('me')")
     public Language createLanguage(@Valid @RequestBody LanguageModel languageModel) {
-        Language language = new Language();
-        language.setLevel(languageModel.level);
-        language.setName(languageModel.name);
-        return cvService.saveLanguage(language);
+        return cvService.saveLanguage(languageModel);
     }
 
     @DeleteMapping("/language/{id}")
@@ -51,7 +50,7 @@ public class CVController {
 
     @PostMapping("/skill")
     @PreAuthorize("hasRole('me')")
-    public Skill createSkill(@Valid @RequestBody Skill skill) {
+    public Skill createSkill(@Valid @RequestBody SkillModel skill) {
         return cvService.saveSkill(skill);
     }
 

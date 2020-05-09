@@ -21,10 +21,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Service public class MinioCloudClient {
-    @Autowired private MinioClient minioClient;
+@Service
+public class MinioCloudClient {
+    @Autowired
+    private MinioClient minioClient;
 
-    @Autowired private MinioConfigurationProperties configurationProperties;
+    @Autowired
+    private MinioConfigurationProperties configurationProperties;
 
     /**
      * List all objects at root of the bucket
@@ -104,7 +107,7 @@ import java.util.stream.StreamSupport;
     /**
      * Get a file from Minio, and save it in the {@code fileName} file
      *
-     * @param source Path with prefix to the object. Object name must be included.
+     * @param source   Path with prefix to the object. Object name must be included.
      * @param fileName Filename
      * @throws com.jlefebure.spring.boot.minio.MinioException if an error occur while fetch object
      */
@@ -118,8 +121,9 @@ import java.util.stream.StreamSupport;
 
     /**
      * Upload a file to Minio
-     * @param source Path with prefix to the object. Object name must be included.
-     * @param file File as an inputstream
+     *
+     * @param source      Path with prefix to the object. Object name must be included.
+     * @param file        File as an inputstream
      * @param contentType MIME type for the object
      * @throws com.jlefebure.spring.boot.minio.MinioException if an error occur while uploading object
      */
@@ -133,8 +137,9 @@ import java.util.stream.StreamSupport;
 
     /**
      * Upload a file to Minio
-     * @param source Path with prefix to the object. Object name must be included.
-     * @param file File as an inputstream
+     *
+     * @param source      Path with prefix to the object. Object name must be included.
+     * @param file        File as an inputstream
      * @param contentType MIME type for the object
      * @throws com.jlefebure.spring.boot.minio.MinioException if an error occur while uploading object
      */
@@ -161,8 +166,8 @@ import java.util.stream.StreamSupport;
     }
 
     void resolveBucket() throws MinioException {
-         try{
-            if(!minioClient.bucketExists(configurationProperties.getBucket())) {
+        try {
+            if (!minioClient.bucketExists(configurationProperties.getBucket())) {
                 minioClient.makeBucket(configurationProperties.getBucket());
             }
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | RegionConflictException e) {

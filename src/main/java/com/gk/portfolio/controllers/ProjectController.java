@@ -5,7 +5,6 @@ import com.gk.portfolio.models.ProjectModel;
 import com.gk.portfolio.services.ProjectService;
 import com.gk.portfolio.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +17,8 @@ import java.util.List;
 @RequestMapping("/api/v1/project")
 @Validated
 public class ProjectController {
-    @Autowired ProjectService projectService;
+    @Autowired
+    ProjectService projectService;
 
     @GetMapping
     public List<Project> findAll() {
@@ -48,7 +48,7 @@ public class ProjectController {
         projectService.delete(id);
     }
 
-    public String getRequesterRole(){
+    private String getRequesterRole() {
         UserService.SecuredUser securedUser = ((UserService.SecuredUser) (SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
         return securedUser.getUser().getRole();
     }

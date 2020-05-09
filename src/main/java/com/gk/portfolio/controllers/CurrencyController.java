@@ -11,10 +11,9 @@ public class CurrencyController {
     DataFixerCurrencyService dataFixerCurrencyService;
 
 
-
     @GetMapping("/from/{from}/to/{to}")
     public String getRates(@PathVariable("from") String from,
-                           @PathVariable("to") String to){
+                           @PathVariable("to") String to) {
         return dataFixerCurrencyService.exchange(from, to);
     }
 }

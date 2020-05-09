@@ -16,8 +16,10 @@ import java.math.RoundingMode;
 @Service
 public class DataFixerCurrencyService implements CurrencyService {
 
-    @Autowired CurrencyGateway currencyGateway;
-    @Value("${currency.api.token}") String accessKey;
+    @Autowired
+    CurrencyGateway currencyGateway;
+    @Value("${currency.api.token}")
+    String accessKey;
 
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

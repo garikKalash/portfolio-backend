@@ -2,10 +2,7 @@ package com.gk.portfolio.services;
 
 import com.gk.portfolio.entities.User;
 import com.gk.portfolio.repositories.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +17,8 @@ import java.util.List;
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired UserRepository userRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
@@ -31,7 +29,7 @@ public class UserService implements UserDetailsService {
     public class SecuredUser implements UserDetails {
         final private User user;
 
-        public SecuredUser(User user) {
+        SecuredUser(User user) {
             this.user = user;
         }
 
@@ -70,15 +68,15 @@ public class UserService implements UserDetailsService {
             return true;
         }
 
-        public User getUser(){
+        public User getUser() {
             return this.user;
         }
     }
 
-    public class GrantedAuthorityImpl implements GrantedAuthority {
+    public static class GrantedAuthorityImpl implements GrantedAuthority {
         private final String role;
 
-        public GrantedAuthorityImpl(String role) {
+        GrantedAuthorityImpl(String role) {
             this.role = role;
         }
 
@@ -88,23 +86,23 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    List<? extends GrantedAuthority> resolveAuthorities(String role){
-        switch (role){
+    private List<? extends GrantedAuthority> resolveAuthorities(String role) {
+        switch (role) {
             case "me":
                 return Arrays.asList(new GrantedAuthorityImpl("me"),
                         new GrantedAuthorityImpl("hr"),
-                        new GrantedAuthorityImpl("technical_guy") );
+                        new GrantedAuthorityImpl("technical_guy"));
             case "hr":
                 return Arrays.asList(new GrantedAuthorityImpl("hr"), new GrantedAuthorityImpl("hr"));
             case "technical_guy":
                 return Arrays.asList(new GrantedAuthorityImpl("hr"),
-                        new GrantedAuthorityImpl("technical_guy") );
+                        new GrantedAuthorityImpl("technical_guy"));
             default:
                 throw new UsernameNotFoundException(role);
         }
     }
 
-    @Scheduled(fixedDelay = 5_1000L)
+    @Scheduled(fixedDelay = 5 * 1000L)
     private void noSleepHeroku() {
         userRepository.findAll();
     }

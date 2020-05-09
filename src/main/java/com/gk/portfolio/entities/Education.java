@@ -3,7 +3,7 @@ package com.gk.portfolio.entities;
 import javax.persistence.Entity;
 
 @Entity
-public class Education extends IdentifiedEntity<Long>{
+public class Education extends IdentifiedEntity<Long> {
     private String name;
     private Integer fromYear;
     private Integer toYear;

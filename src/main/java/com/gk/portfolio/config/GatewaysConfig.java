@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GatewaysConfig {
     @Bean
-    public CurrencyGateway currencyGateway(){
+    public CurrencyGateway currencyGateway() {
         return JAXRSClientFactory.create(CurrencyGateway.URL, CurrencyGateway.class);
     }
 }

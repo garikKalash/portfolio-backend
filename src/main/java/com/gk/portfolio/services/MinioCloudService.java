@@ -24,13 +24,15 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
-@Service public class MinioCloudService implements FileCloudService {
+@Service
+public class MinioCloudService implements FileCloudService {
     private static final Logger logger = LoggerFactory.getLogger(MinioCloudService.class);
 
-    @Autowired MinioCloudClient minioCloudClient;
+    @Autowired
+    MinioCloudClient minioCloudClient;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         createBucketIfNeeded();
     }
 
@@ -50,24 +52,24 @@ import static java.lang.String.format;
 
     @Override
     public ByteArrayOutputStream download(String name) {
-            InputStream is;
-            try {
-                is = minioCloudClient.get(Paths.get(name));
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                int len;
-                byte[] buffer = new byte[4096];
-                while ((len = is.read(buffer, 0, buffer.length)) != -1) {
-                    baos.write(buffer, 0, len);
-                }
-
-                return baos;
-            } catch (MinioException ex) {
-                logger.error(format("Error in getting files %s", ex.getMessage()));
-                throw new ExternalServiceUnavailableException(format("Minio service problem. %s", ex.getMessage()));
-            } catch (IOException ex) {
-                logger.error(format("Error in input/output files %s", ex.getMessage()));
+        InputStream is;
+        try {
+            is = minioCloudClient.get(Paths.get(name));
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            int len;
+            byte[] buffer = new byte[4096];
+            while ((len = is.read(buffer, 0, buffer.length)) != -1) {
+                baos.write(buffer, 0, len);
             }
-            return null;
+
+            return baos;
+        } catch (MinioException ex) {
+            logger.error(format("Error in getting files %s", ex.getMessage()));
+            throw new ExternalServiceUnavailableException(format("Minio service problem. %s", ex.getMessage()));
+        } catch (IOException ex) {
+            logger.error(format("Error in input/output files %s", ex.getMessage()));
+        }
+        return null;
     }
 
 
@@ -97,8 +99,8 @@ import static java.lang.String.format;
         }
     }
 
-    @Scheduled(fixedDelay = 1000 * 60 *60)
-    public void createBucketIfNeeded(){
+    @Scheduled(fixedDelay = 1000 * 60 * 60)
+    public void createBucketIfNeeded() {
         try {
             minioCloudClient.resolveBucket();
         } catch (MinioException e) {

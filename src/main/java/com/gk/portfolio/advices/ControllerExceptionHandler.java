@@ -12,12 +12,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(value = { InvalidSimpleExpressionException.class})
+    @ExceptionHandler(value = {InvalidSimpleExpressionException.class})
     protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler(value = { ExternalServiceUnavailableException.class})
+    @ExceptionHandler(value = {ExternalServiceUnavailableException.class})
     protected ResponseEntity<Object> handleExternalUnavailable(RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE, request);
     }

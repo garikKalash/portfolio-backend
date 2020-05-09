@@ -2,16 +2,24 @@ package com.gk.portfolio.services;
 
 import com.gk.portfolio.entities.*;
 import com.gk.portfolio.models.EducationModel;
+import com.gk.portfolio.models.LanguageModel;
+import com.gk.portfolio.models.SkillModel;
 import com.gk.portfolio.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service public class CVService {
-    @Autowired EducationRepository educationRepository;
-    @Autowired LanguageRepository languageRepository;
-    @Autowired UserRepository userRepository;
-    @Autowired SkillRepository skillRepository;
-    @Autowired ExperienceRepository experienceRepository;
+@Service
+public class CVService {
+    @Autowired
+    EducationRepository educationRepository;
+    @Autowired
+    LanguageRepository languageRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    SkillRepository skillRepository;
+    @Autowired
+    ExperienceRepository experienceRepository;
 
     public CV getCv() {
         CV cv = new CV();
@@ -43,7 +51,10 @@ import org.springframework.stereotype.Service;
         educationRepository.deleteById(id);
     }
 
-    public Skill saveSkill(Skill skill) {
+    public Skill saveSkill(SkillModel skillModel) {
+        Skill skill = new Skill();
+        skill.setName(skillModel.name);
+        skill.setExperienceInYear(skillModel.experienceInYear);
         return skillRepository.save(skill);
     }
 
@@ -59,7 +70,10 @@ import org.springframework.stereotype.Service;
         experienceRepository.deleteById(id);
     }
 
-    public Language saveLanguage(Language language) {
+    public Language saveLanguage(LanguageModel languageModel) {
+        Language language = new Language();
+        language.setLevel(languageModel.level);
+        language.setName(languageModel.name);
         return languageRepository.save(language);
     }
 
@@ -67,7 +81,4 @@ import org.springframework.stereotype.Service;
         languageRepository.deleteById(id);
     }
 
-    public User saveMyDetails(User user) {
-        return userRepository.save(user);
-    }
 }
