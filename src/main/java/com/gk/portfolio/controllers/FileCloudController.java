@@ -1,6 +1,6 @@
 package com.gk.portfolio.controllers;
 
-import com.gk.portfolio.services.MinioCloudService;
+import com.gk.portfolio.services.S3CloudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,16 +16,22 @@ import java.util.List;
 public class FileCloudController {
 
     @Autowired
-    private MinioCloudService minioService;
+    private S3CloudService s3CloudService;
 
     @GetMapping
     public List<String> names() {
-        return minioService.fileNames();
+        return s3CloudService.fileNames();
     }
+
+    @GetMapping("/buckets")
+    public List<String> bucketsNames() {
+        return s3CloudService.getBucketsList();
+    }
+
 
     @GetMapping("/{name:.+}")
     public ResponseEntity<byte[]> getObject(@PathVariable("name") String object) {
-        ByteArrayOutputStream downloadInputStream = minioService.download(object);
+        ByteArrayOutputStream downloadInputStream = s3CloudService.download(object);
 
         return ResponseEntity.ok()
                 .contentType(contentType(object))
@@ -50,11 +56,11 @@ public class FileCloudController {
 
     @PostMapping
     public void upload(@RequestParam("file") MultipartFile file) {
-        minioService.upload(file);
+        s3CloudService.upload(file);
     }
 
     @DeleteMapping("/{path}")
     public void delete(@PathVariable("path") String name) {
-        minioService.delete(name);
+        s3CloudService.delete(name);
     }
 }

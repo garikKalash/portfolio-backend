@@ -40,4 +40,7 @@ public class CalculatorService {
             throw new InvalidSimpleExpressionException("This part of given expression is invalid for evaluating: " + justMultiplicationValidExpression);
         }
     }
+
+
+
 }

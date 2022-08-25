@@ -3,7 +3,6 @@ package com.gk.portfolio.services;
 import com.gk.portfolio.entities.User;
 import com.gk.portfolio.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -102,8 +101,4 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    @Scheduled(fixedDelay = 5 * 1000L)
-    private void noSleepHeroku() {
-        userRepository.findAll();
-    }
 }
