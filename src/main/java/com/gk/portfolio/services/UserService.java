@@ -1,12 +1,14 @@
 package com.gk.portfolio.services;
 
 import com.gk.portfolio.entities.User;
+import com.gk.portfolio.models.UserModel;
 import com.gk.portfolio.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -18,11 +20,55 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userRepository.findByRole(s).orElseThrow(() -> new UsernameNotFoundException(s));
         return new SecuredUser(user);
+    }
+    public User getById(Long id){
+        return userRepository.findById(id).get();
+    }
+
+    public User save(UserModel userModel){
+        User user = new User();
+        user.setName(userModel.name);
+        user.setSurname(userModel.surname);
+        user.setPassword(passwordEncoder().encode(userModel.password));
+        user.setSkype(userModel.skype);
+        user.setAddress(userModel.address);
+        user.setPhone(userModel.phone);
+        user.setRole(userModel.role);
+        user.setEmail(userModel.email);
+        userRepository.save(user);
+        return user;
+    }
+
+    public User update (Long id, UserModel userModel){
+        User user = getById(id);
+        user.setName(userModel.name);
+        user.setSurname(userModel.surname);
+        user.setPassword(passwordEncoder().encode(userModel.password));
+        user.setSkype(userModel.skype);
+        user.setAddress(userModel.address);
+        user.setPhone(userModel.phone);
+        user.setRole(userModel.role);
+        user.setEmail(userModel.email);
+        userRepository.save(user);
+        return user;
+    }
+
+    public String delete (Long id){
+        if (getById(id).getRole().equals("me")){
+            return "The user with role 'me' cant be deleted";
+        } else {
+            userRepository.deleteById(id);
+            return "the user was deleted";
+        }
+
     }
 
     public class SecuredUser implements UserDetails {

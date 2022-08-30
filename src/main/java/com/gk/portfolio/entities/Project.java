@@ -1,9 +1,10 @@
 package com.gk.portfolio.entities;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Entity
-public class Project extends IdentifiedEntity<Long> {
+public class Project extends IdentifiedEntity<Long>{
+
     private String name;
     private String description;
     private String techDescription;
