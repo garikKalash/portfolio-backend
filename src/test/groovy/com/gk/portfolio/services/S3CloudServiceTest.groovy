@@ -1,6 +1,5 @@
 package com.gk.portfolio.services
 
-import com.amazonaws.services.s3.AmazonS3
 import com.gk.portfolio.AppIntegrationTest
 import org.junit.Before
 import org.springframework.beans.factory.annotation.Autowired
@@ -46,7 +45,7 @@ class S3CloudServiceTest extends AppIntegrationTest {
     def "download file"() {
 
         s3CloudService.upload(multipartFile)
-        byte [] bytes = multipartFile.getBytes()
+        byte[] bytes = multipartFile.getBytes()
 
 
         when:
@@ -60,7 +59,6 @@ class S3CloudServiceTest extends AppIntegrationTest {
         s3CloudService.delete("new_file.txt")
 
 
-
     }
 
     def "delete file"() {
@@ -72,10 +70,10 @@ class S3CloudServiceTest extends AppIntegrationTest {
         s3CloudService.delete("new_file.txt")
 
         then:
-       s3CloudService.fileNames().size() == size - 1
+        s3CloudService.fileNames().size() == size - 1
+        !s3CloudService.fileNames().contains("new_file.txt")
 
     }
-
 
 
 }

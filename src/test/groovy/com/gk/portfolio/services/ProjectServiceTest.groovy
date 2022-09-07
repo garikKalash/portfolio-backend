@@ -12,12 +12,11 @@ class ProjectServiceTest extends AppIntegrationTest{
     @Autowired
     ProjectService projectService
 
-    ProjectModel model
+    ProjectModel model = new ProjectModel()
 
     @Before
     ProjectModel createProjectModel(){
-        model = new ProjectModel()
-        model.name = 'pro_name'
+        model.name = 'name'
         model.description = 'shopping service'
         model.techDescription = 'java project'
         model.projectType = 'backend'
@@ -28,14 +27,8 @@ class ProjectServiceTest extends AppIntegrationTest{
     def "save project"() {
 
         when:
-        def projects = projectService.getAll()
-
-        then:
-        projects.empty
-
-        when:
         def saved = projectService.save(model)
-        projects = projectService.getAll()
+        def projects = projectService.getAll()
 
         then:
         saved.name == model.name
@@ -44,7 +37,7 @@ class ProjectServiceTest extends AppIntegrationTest{
         saved.projectType == model.projectType
 
         and:
-        projects.stream().anyMatch({ project -> project.name == model.name })
+        projects.stream().map({ project -> project.id == saved.id }).any()
 
         cleanup:
         projectService.delete(saved.id)
@@ -53,7 +46,7 @@ class ProjectServiceTest extends AppIntegrationTest{
     def "update project"() {
         given:
         ProjectModel model2 = new ProjectModel()
-        model2.name = 'pro_name2'
+        model2.name = 'name2'
         model2.description = 'shopping service2'
         model2.techDescription = 'java project2'
         model2.projectType = 'backend2'
@@ -63,15 +56,15 @@ class ProjectServiceTest extends AppIntegrationTest{
         def invalidId = saved.id + 1
 
         when:
-        def updated = projectService.update(saved.getId(), model2)
+        def updated = projectService.update((saved.id), model2)
 
 
         then:
-        updated.getId() == saved.getId()
-        updated.getName() == model2.name
-        updated.getDescription() == model2.description
-        updated.getTechDescription() == model2.techDescription
-        updated.getProjectType() == model2.projectType
+        updated.id == saved.id
+        updated.name == model2.name
+        updated.description == model2.description
+        updated.techDescription == model2.techDescription
+        updated.projectType == model2.projectType
 
         when:
         projectService.update(invalidId, model2)
@@ -84,20 +77,20 @@ class ProjectServiceTest extends AppIntegrationTest{
     }
 
     def "delete project"() {
-        def saved = projectService.save(model)
 
         when:
+        def saved = projectService.save(model)
         def projects = projectService.getAll()
 
         then:
-        projects.size() == 1
+        projects.stream().map({ project -> project.id == saved.id }).any()
 
         when:
         projectService.delete(saved.id)
         projects = projectService.getAll()
 
         then:
-        projects.empty
+        !projects.stream().map({ project -> project.id == saved.id }).any()
 
     }
 

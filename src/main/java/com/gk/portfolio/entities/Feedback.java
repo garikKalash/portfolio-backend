@@ -7,8 +7,17 @@ import javax.persistence.Entity;
 public class Feedback extends IdentifiedEntity<Long>{
     private String name;
     private String position;
-    private Integer durationInMans;
+    private Integer durationInMonths;
     private String text;
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getName() {
         return name;
@@ -26,12 +35,12 @@ public class Feedback extends IdentifiedEntity<Long>{
         this.position = position;
     }
 
-    public Integer getDurationInMans() {
-        return durationInMans;
+    public Integer getDurationInMonths() {
+        return durationInMonths;
     }
 
-    public void setDurationInMans(Integer durationInMans) {
-        this.durationInMans = durationInMans;
+    public void setDurationInMonths(Integer durationInMonths) {
+        this.durationInMonths = durationInMonths;
     }
 
     public String getText() {

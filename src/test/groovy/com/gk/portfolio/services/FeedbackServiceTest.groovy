@@ -12,35 +12,31 @@ class FeedbackServiceTest extends AppIntegrationTest {
     @Autowired
     FeedbackService feedbackService
 
-    FeedbackModel model;
+    FeedbackModel model = new FeedbackModel();
+
     @Before
     FeedbackModel createModel(){
-       model = new FeedbackModel()
         model.name = 'author'
         model.position = 'engineer'
-        model.durationInMans = 2
+        model.duration = 2
         model.text = 'excellent team'
+        model.email = 'author@gmail.com'
         return model;
     }
 
-
     def "save feedback"() {
         when:
+
+        def saved = feedbackService.save(model)
         def feedbackList = feedbackService.getAll()
 
         then:
-        feedbackList.empty
-
-        when:
-        def saved = feedbackService.save(model)
-        feedbackList = feedbackService.getAll()
-
-        then:
-        feedbackList.size() == 1
         saved.name == model.name
         saved.position == model.position
-        saved.durationInMans == model.durationInMans
+        saved.durationInMonths == model.duration
         saved.text == model.text
+        saved.email == model.email
+        feedbackList.stream().map({ fdb -> fdb.id == saved.id }).any()
 
         cleanup:
         feedbackService.delete(saved.id)
@@ -51,8 +47,9 @@ class FeedbackServiceTest extends AppIntegrationTest {
         FeedbackModel model2 = new FeedbackModel()
         model2.name = 'author2'
         model2.position = 'leader engineer'
-        model2.durationInMans = 3
+        model2.duration = 3
         model2.text = 'excellent team'
+        model2.email = 'author2@gmail.com'
 
         and:
         def saved = feedbackService.save(model)
@@ -62,11 +59,12 @@ class FeedbackServiceTest extends AppIntegrationTest {
         def updated = feedbackService.update(saved.id, model2)
 
         then:
-        updated.getId() == saved.getId()
-        updated.getName() == model2.name
-        updated.getPosition() == model2.position
-        updated.getDurationInMans() == model2.durationInMans
-        updated.getText() == model2.text
+        updated.id == saved.getId()
+        updated.name == model2.name
+        updated.position == model2.position
+        updated.durationInMonths == model2.duration
+        updated.text == model2.text
+        updated.email == model2.email
 
         when:
         feedbackService.update(invalidId, model2)
@@ -75,7 +73,7 @@ class FeedbackServiceTest extends AppIntegrationTest {
         thrown(NotFoundException)
 
         cleanup:
-        feedbackService.delete(updated.getId())
+        feedbackService.delete(updated.id)
     }
 
     def "delete feedback"() {
@@ -86,14 +84,15 @@ class FeedbackServiceTest extends AppIntegrationTest {
         def feedbacks = feedbackService.getAll()
 
         then:
-        feedbacks.size() == 1
+        feedbacks.stream().map({ fdb -> fdb.id == saved.id }).any()
 
         when:
         feedbackService.delete(saved.id)
         feedbacks = feedbackService.getAll()
 
         then:
-        feedbacks.empty
+        !feedbacks.stream().map({ fdb -> fdb.id == saved.id }).any()
+
 
     }
 

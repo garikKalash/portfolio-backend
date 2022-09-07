@@ -1,12 +1,9 @@
 package com.gk.portfolio.controllers
 
 import com.gk.portfolio.AppIntegrationTest
-import com.gk.portfolio.PortfolioApplication
-import com.gk.portfolio.entities.Skill
+
 import com.gk.portfolio.models.SkillModel
-import com.gk.portfolio.services.CVService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.test.context.support.WithMockUser
 
 import javax.validation.ConstraintViolationException
@@ -28,14 +25,14 @@ class CVControllerTest extends AppIntegrationTest {
         given:
         SkillModel model = new SkillModel()
         model.name = "skill_name"
-        model.experienceInYear = 4.5
+        model.experience = 4.5
 
         when:
         def saved = cvController.createSkill(model)
 
         then:
         saved.name == model.name
-        saved.experienceInYear == model.experienceInYear
+        saved.experienceInYear == model.experience
 
         when: "blank name"
         model.name = "               "

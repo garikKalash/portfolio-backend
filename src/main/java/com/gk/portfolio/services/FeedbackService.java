@@ -3,6 +3,7 @@ package com.gk.portfolio.services;
 import com.gk.portfolio.entities.Feedback;
 import com.gk.portfolio.models.FeedbackModel;
 import com.gk.portfolio.repositories.FeedbackRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,11 @@ public class FeedbackService {
     public Feedback save(FeedbackModel feedbackModel) {
         Feedback feedback = new Feedback();
         feedback.setName(feedbackModel.name);
-        feedback.setDurationInMans(feedbackModel.durationInMans);
+        feedback.setDurationInMonths(feedbackModel.duration);
         feedback.setPosition(feedbackModel.position);
         feedback.setText(feedbackModel.text);
-       return feedbackRepository.save(feedback);
+        feedback.setEmail(feedbackModel.email);
+        return feedbackRepository.save(feedback);
     }
 
     public void delete(Long id) {
@@ -39,10 +41,12 @@ public class FeedbackService {
         Feedback feedback = feedbackRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(format("Feedback with id %s not found.", id)));
         feedback.setName(feedbackModel.name);
-        feedback.setDurationInMans(feedbackModel.durationInMans);
+        feedback.setDurationInMonths(feedbackModel.duration);
         feedback.setPosition(feedbackModel.position);
         feedback.setText(feedbackModel.text);
-        return feedbackRepository.save(feedback);
+        feedback.setEmail(feedbackModel.email);
+        return  feedbackRepository.save(feedback);
+
     }
 
 
