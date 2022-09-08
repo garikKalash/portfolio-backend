@@ -21,6 +21,16 @@ public class ProjectService {
     public List<Project> getAll() {
         return projectRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
+    public Project update(Long id, ProjectModel projectModel){
+        Project project = projectRepository.findById(id)
+                .orElseThrow(()->new NotFoundException(format("Project with id %s not found.", id)));
+        project.setName(projectModel.name);
+        project.setDescription(projectModel.description);
+        project.setTechDescription(projectModel.techDescription);
+        project.setProjectType(projectModel.projectType);
+        return projectRepository.save(project);
+    }
+
 
     public List<Project> getByType(String type, boolean noTechPerson) {
         if (noTechPerson) {
@@ -38,7 +48,6 @@ public class ProjectService {
 
     public Project save(ProjectModel projectModel) {
         Project project = new Project();
-        project.setId(projectModel.id);
         project.setName(projectModel.name);
         project.setDescription(projectModel.description);
         project.setTechDescription(projectModel.techDescription);

@@ -4,10 +4,13 @@ import com.gk.portfolio.AppIntegrationTest
 import com.gk.portfolio.entities.Experience
 import com.gk.portfolio.entities.Skill
 import com.gk.portfolio.models.EducationModel
+import com.gk.portfolio.models.ExperienceModel
 import com.gk.portfolio.models.LanguageModel
+import com.gk.portfolio.models.SkillModel
 import org.springframework.beans.factory.annotation.Autowired
 
-class CVServiceITest extends AppIntegrationTest {
+class CVServiceTest extends AppIntegrationTest {
+
     @Autowired
     CVService cvService
 
@@ -30,14 +33,8 @@ class CVServiceITest extends AppIntegrationTest {
         model.level = 'edu_levl'
 
         when:
-        def cv = cvService.cv
-
-        then:
-        cv.educations.empty
-
-        when:
         def saved = cvService.saveEducation(model)
-        cv = cvService.getCv()
+        def cv = cvService.cv
 
         then:
         saved.name == model.name
@@ -46,13 +43,13 @@ class CVServiceITest extends AppIntegrationTest {
         saved.level == model.level
 
         and:
-        cv.educations.stream().anyMatch({ ed -> ed.name == model.name })
+        cv.educations.stream().map({ ed -> ed.id == saved.id }).any()
 
         cleanup:
         cvService.removeEducation(saved.id)
     }
 
-    
+
     def removeEducation() {
         given:
         EducationModel model = new EducationModel()
@@ -68,51 +65,45 @@ class CVServiceITest extends AppIntegrationTest {
         def cv = cvService.cv
 
         then:
-        cv.educations.size() == 1
+        cv.educations.stream().map({ ed -> ed.id == saved.id }).any()
 
         when:
         cvService.removeEducation(saved.id)
         cv = cvService.cv
 
         then:
-        cv.educations.empty
+        !cv.educations.stream().map({ ed -> ed.id == saved.id }).any()
 
     }
 
-    
+
     def saveSkill() {
         given:
-        Skill model = new Skill()
+        SkillModel model = new SkillModel()
         model.name = 'edu_name'
-        model.experienceInYear = 4.5
-
-        when:
-        def cv = cvService.cv
-
-        then:
-        cv.skills.empty
+        model.experience = 4.5
 
         when:
         def saved = cvService.saveSkill(model)
-        cv = cvService.getCv()
+        def cv = cvService.getCv()
 
         then:
         saved.name == model.name
-        saved.experienceInYear == model.experienceInYear
+        saved.experienceInYear == model.experience
 
         and:
-        cv.skills.stream().anyMatch({ ed -> ed.name == model.name })
+        cv.skills.stream().map({ skill -> skill.id == saved.id }).any()
 
         cleanup:
         cvService.removeSkill(saved.id)
     }
 
-    
+
     def removeSkill() {
         given:
-        Skill model = new Skill()
+        SkillModel model = new SkillModel()
         model.name = 'edu_name'
-        model.experienceInYear = 4.5
+        model.experience = 4.5
 
         and:
         def saved = cvService.saveSkill(model)
@@ -121,20 +112,21 @@ class CVServiceITest extends AppIntegrationTest {
         def cv = cvService.cv
 
         then:
-        cv.skills.size() == 1
+        cv.skills.stream().map({ skill -> skill.id == saved.id }).any()
 
         when:
         cvService.removeSkill(saved.id)
         cv = cvService.cv
 
         then:
-        cv.skills.empty
+        !cv.skills.stream().map({ skill -> skill.id == saved.id }).any()
+
     }
 
-    
+
     def saveExperience() {
         given:
-        Experience model = new Experience()
+        ExperienceModel model = new ExperienceModel()
         model.company = 'company_name'
         model.fromYear = 2000
         model.toYear = 2020
@@ -142,33 +134,26 @@ class CVServiceITest extends AppIntegrationTest {
         model.workRole = 'company_role'
 
         when:
-        def cv = cvService.cv
-
-        then:
-        cv.experiences.empty
-
-        when:
         def saved = cvService.saveExperience(model)
-        cv = cvService.getCv()
+        def  cv = cvService.getCv()
 
         then:
-        saved.id
         saved.company == model.company
         saved.fromYear == model.fromYear
         saved.toYear == model.toYear
         saved.description == model.description
 
         and:
-        cv.experiences.stream().anyMatch({ ed -> ed.company == model.company })
+        cv.experiences.stream().map({ exp -> exp.id == saved.id }).any()
 
         cleanup:
         cvService.removeExperience(saved.id)
     }
 
-    
+
     def removeExperience() {
         given:
-        Experience model = new Experience()
+        ExperienceModel model = new ExperienceModel()
         model.company = 'company_name'
         model.fromYear = 2000
         model.toYear = 2020
@@ -180,19 +165,18 @@ class CVServiceITest extends AppIntegrationTest {
 
         when:
         def cv = cvService.cv
-
         then:
-        cv.experiences.size() == 1
+        cv.experiences.stream().map({ exp -> exp.id == saved.id }).any()
 
         when:
         cvService.removeExperience(saved.id)
         cv = cvService.cv
 
         then:
-        cv.experiences.empty
+        !cv.experiences.stream().map({ exp -> exp.id == saved.id }).any()
     }
 
-    
+
     def saveLanguage() {
         given:
         LanguageModel model = new LanguageModel()
@@ -200,27 +184,21 @@ class CVServiceITest extends AppIntegrationTest {
         model.level = 'lang_levl'
 
         when:
-        def cv = cvService.cv
-
-        then:
-        cv.languages.empty
-
-        when:
         def saved = cvService.saveLanguage(model)
-        cv = cvService.getCv()
+        def cv = cvService.getCv()
 
         then:
         saved.getName() == model.name
         saved.getLevel() == model.level
 
         and:
-        cv.languages.stream().anyMatch({ ed -> ed.getName() == model.name })
+        cv.languages.stream().map({ lng -> lng.id == saved.id }).any()
 
         cleanup:
         cvService.removeLanguage(saved.id)
     }
 
-    
+
     def removeLanguage() {
         given:
         LanguageModel model = new LanguageModel()
@@ -234,13 +212,13 @@ class CVServiceITest extends AppIntegrationTest {
         def cv = cvService.cv
 
         then:
-        cv.languages.size() == 1
+        cv.languages.stream().map({ lng -> lng.id == saved.id }).any()
 
         when:
         cvService.removeLanguage(saved.id)
-        cv  = cvService.cv
+        cv = cvService.cv
 
         then:
-        cv.languages.empty
+        !cv.languages.stream().map({ lng -> lng.id == saved.id }).any()
     }
 }

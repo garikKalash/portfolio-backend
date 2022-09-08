@@ -11,5 +11,5 @@ public class SkillModel {
 
     @NotNull
     @DecimalMin("0.1")
-    public BigDecimal experienceInYear;
+    public BigDecimal experience;
 }

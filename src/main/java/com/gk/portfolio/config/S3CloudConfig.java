@@ -1,8 +1,6 @@
 package com.gk.portfolio.config;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.*;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
@@ -19,9 +17,9 @@ import java.util.stream.Collectors;
 public class S3CloudConfig {
 
 
-    @Value("${accessKey}")
+//    @Value("${accessKey}")
     String accessKey;
-    @Value("${secretKey}")
+//    @Value("${secretKey}")
     String secretKey;
     @Value("${region}")
     String region;
@@ -31,10 +29,9 @@ public class S3CloudConfig {
 
     @Bean
     public AmazonS3 getS3client() {
-        AWSCredentials credentials = new BasicAWSCredentials(
-                accessKey,
-                secretKey
-        );
+        DefaultAWSCredentialsProviderChain props = new DefaultAWSCredentialsProviderChain();
+
+        AWSCredentials credentials = props.getCredentials();
         return AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
